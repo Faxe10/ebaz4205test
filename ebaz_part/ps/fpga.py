@@ -3,7 +3,7 @@ from pynq.lib import AxiGPIO
 import time
 import numpy as np
 import sys
-path_overlay = "./pl/test.bit"
+path_overlay = "~/ebaztets/ebaz4205test/ebaz_part/pl/test.bit"
 
 class FPGA:
     def __init__(self):
