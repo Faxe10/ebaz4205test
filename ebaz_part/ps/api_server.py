@@ -29,5 +29,5 @@ class Api_Server:
             return jsonify(data)
 
 if __name__ == '__main__':
-    API_SERVER = Api_Server(fpga, host='0.0.0.0', port=8082)
-    API_SERVER.app.run(debug=True)
+    api_server = Api_Server(fpga, host='0.0.0.0', port=8082)
+    api_server.app.run(host=api_server.host, port=api_server.port, threaded=True, use_reloader=False)
