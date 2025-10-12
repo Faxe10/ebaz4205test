@@ -16,17 +16,17 @@ class Api_Server:
         @app.route('/api/get_data1', methods=['GET'])
         def get_data1():
             data = self.fpga.get_data_1()
-            return jsonify(data)
+            return data, format(data, f'032b')
 
         @app.route('/api/get_data2', methods=['GET'])
         def get_dat2():
             data = self.fpga.get_data_2()
-            return jsonify(data)
+            return data, format(data, f'032b')
 
         @app.route('/api/get_data3', methods=['GET'])
         def get_data3():
             data = self.fpga.get_data_3()
-            return jsonify(data)
+            return data, format(data, f'032b')
 
 if __name__ == '__main__':
     api_server = Api_Server(fpga, host='0.0.0.0', port=8082)
