@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify, Response
 from flask_cors import CORS
-import fpga
+from  fpga import FPGA
 class Api_Server:
     def __init__(self, fpga,  host='0.0.0.0', port=8082):
         self.app = Flask(__name__)
