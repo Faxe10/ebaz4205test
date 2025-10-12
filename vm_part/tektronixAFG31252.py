@@ -71,10 +71,12 @@ class AFG31252:
         self.dev.write(f"SOURce{ch}:VOLTage:LEVel:IMMediate:OFFSet {v}")
         self.dev.query("*OPC?") #wait for new value to be set
 
+    def get_offset(self,ch):
+        data = self.dev.query(f"SOUR{ch}:VOLT:LEV:IMM:OFFS?").strip()
+        return data
 
 if __name__ == "__main__":
     print("Testing AFG31252")
-
     AFG_IP = "10.140.1.58"
     afg = AFG31252(AFG_IP)
     #afg.channel_setup()
