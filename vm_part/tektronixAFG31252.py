@@ -69,7 +69,7 @@ class AFG31252:
 
     def set_offset(self,ch,v):
         self.dev.write(f"SOURce{ch}:VOLTage:LEVel:IMMediate:OFFSet {v}")
-        _ = self.dev.query("*OPC?") #wait for new value to be set
+        self.dev.query("*OPC?") #wait for new value to be set
 
 
 if __name__ == "__main__":
