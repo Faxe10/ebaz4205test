@@ -29,5 +29,6 @@ class Api_Server:
             return data, format(data, f'032b')
 
 if __name__ == '__main__':
+    fpga = FPGA()
     api_server = Api_Server(fpga, host='0.0.0.0', port=8082)
     api_server.app.run(host=api_server.host, port=api_server.port, threaded=True, use_reloader=False)
