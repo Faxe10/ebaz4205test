@@ -12,14 +12,14 @@ class FPGA:
         self.pl_data_port2 = self.overlay.data2()
         self.pl_data_port3 = self.overlay.data3()
 
-    def return_data_1(self):
+    def get_data_1(self):
         data = self.pl_data_port1.read()
         return data
 
-    def return_data_2(self):
+    def get_data_2(self):
         data = self.pl_data_port2.read()
         return data
 
-    def return_data_3(self):
+    def get_data_3(self):
         data = self.pl_data_port3.read()
         return data
