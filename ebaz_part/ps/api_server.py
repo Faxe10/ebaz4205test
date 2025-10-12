@@ -27,3 +27,7 @@ class Api_Server:
         def get_data(port_num):
             data = self.fpga.get_data_3()
             return jsonify(data)
+
+if __name__ == '__main__':
+    API_SERVER = Api_Server(fpga, host='0.0.0.0', port=8082)
+    API_SERVER.app.run(debug=True)
