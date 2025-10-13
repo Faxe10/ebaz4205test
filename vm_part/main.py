@@ -4,6 +4,8 @@ import logging
 import sys, os
 from fileinput import filename
 
+from pyvisa_py.common import LOGGER
+
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))  # Projekt-Root
 import requests
 import numpy as np
@@ -56,6 +58,7 @@ def next_free_filename(base_name, ext=".csv"):
             return filename
         n += 1
 def sequenz1(v_start, v_end, v_step,wait_time,afg,runs):
+    time_start_seq = datetime.datetime.now()
     afg.set_offset(2, 0)
     filename = next_free_filename("sequenz1_run")
     new_csv(filename)
@@ -80,13 +83,19 @@ def sequenz1(v_start, v_end, v_step,wait_time,afg,runs):
                 data[measurment_counter].append(pins_state)
             measurment_counter = measurment_counter + 1
             #save_csv(filename,data,v_current )
-
+        msg = "Finished Sequenz 1 run:" + str(run_counter)
+        logger.info(msg)
     with open(filename, 'w') as file:
         wr = csv.writer(file, quoting=csv.QUOTE_ALL)
         for row in data:
             wr.writerow(row)
+    time_passed = datetime.datetime.now() - time_start_seq
+    time_now = datetime.datetime.now()
+    log_msg = str(time_now) + "  Sequenz 1 finished in: " + str(time_passed)
+    logging.info(log_msg)
 
 def sequenz2(v_start, v_end, v_step, wait_time, afg, runs):
+    time_start_seq = datetime.datetime.now()
     filename = next_free_filename("sequenz2_run")
     afg.set_offset(1, 0)
     new_csv(filename)
@@ -110,12 +119,19 @@ def sequenz2(v_start, v_end, v_step, wait_time, afg, runs):
                 data.append([v_current])
                 data[measurment_counter].append(pins_state)
             measurment_counter = measurment_counter + 1
-
+        msg = "Finished Sequenz 2 run:" + str(run_counter)
+        logger.info(msg)
     with open(filename, 'w') as file:
         wr = csv.writer(file, quoting=csv.QUOTE_ALL)
         for row in data:
             wr.writerow(row)
+
+    time_passed = datetime.datetime.now() - time_start_seq
+    time_now = datetime.datetime.now()
+    log_msg = str(time_now) + "  Sequenz 2 finished in: " + str(time_passed)
+    logging.info(log_msg)
 def sequenz3(v_start, v_end, v_step, wait_time, afg, runs):
+    time_start_seq = datetime.datetime.now()
     afg.set_offset(2, 3.2)
     afg.set_offset(1, 0)
     filename = next_free_filename("sequenz3_run")
@@ -141,13 +157,18 @@ def sequenz3(v_start, v_end, v_step, wait_time, afg, runs):
                 data.append([v_current])
                 data[measurment_counter].append(pins_state)
             measurment_counter = measurment_counter + 1
-
+        msg = "Finished Sequenz 3 run:" + str(run_counter)
+        logger.info(msg)
     with open(filename, 'w') as file:
         wr = csv.writer(file, quoting=csv.QUOTE_ALL)
         for row in data:
             wr.writerow(row)
-
+    time_passed = datetime.datetime.now() - time_start_seq
+    time_now = datetime.datetime.now()
+    log_msg = str(time_now) + "  Sequenz 3 finished in: " + str(time_passed)
+    logger.info(log_msg)
 def sequenz4(v_start, v_end, v_step, wait_time, afg, runs):
+    time_start_seq = datetime.datetime.now()
     afg.set_offset(1, 3.2)
     filename = next_free_filename("sequenz4_run")
     new_csv(filename)
@@ -172,13 +193,20 @@ def sequenz4(v_start, v_end, v_step, wait_time, afg, runs):
                 data.append([v_current])
                 data[measurment_counter].append(pins_state)
             measurment_counter = measurment_counter + 1
-
+        msg = "Finished Sequenz 4 run:" + str(run_counter)
+        logger.info(msg)
     with open(filename, 'w') as file:
         wr = csv.writer(file, quoting=csv.QUOTE_ALL)
         for row in data:
             wr.writerow(row)
 
+    time_passed = datetime.datetime.now() - time_start_seq
+    time_now = datetime.datetime.now()
+    log_msg = str(time_now) + "  Sequenz 4 finished in: " + str(time_passed)
+    logger.info(log_msg)
+
 def sequenz5(v_start, v_end, v_step,wait_time,afg,runs):
+    time_start_seq = datetime.datetime.now()
     afg.set_offset(2, 0)
     filename = next_free_filename("sequenz5_run")
     new_csv(filename)
@@ -203,13 +231,20 @@ def sequenz5(v_start, v_end, v_step,wait_time,afg,runs):
                 data.append([v_current])
                 data[measurment_counter].append(pins_state)
             measurment_counter = measurment_counter + 1
-
+        msg = "Finished Sequenz 5 run:" + str(run_counter)
+        logger.info(msg)
     with open(filename, 'w') as file:
         wr = csv.writer(file, quoting=csv.QUOTE_ALL)
         for row in data:
             wr.writerow(row)
 
+    time_passed = datetime.datetime.now() - time_start_seq
+    time_now = datetime.datetime.now()
+    log_msg = str(time_now) + "  Sequenz 5 finished in: " + str(time_passed)
+    logger.info(log_msg)
+
 def sequenz6(v_start, v_end, v_step, wait_time, afg, runs):
+    time_start_seq = datetime.datetime.now()
     afg.set_offset(1, 0)
     filename = next_free_filename("sequenz6_run")
     new_csv(filename)
@@ -234,13 +269,20 @@ def sequenz6(v_start, v_end, v_step, wait_time, afg, runs):
                 data.append([v_current])
                 data[measurment_counter].append(pins_state)
             measurment_counter = measurment_counter + 1
-
+        msg = "Finished Sequenz 6 run:" + str(run_counter)
+        logger.info(msg)
     with open(filename, 'w') as file:
         wr = csv.writer(file, quoting=csv.QUOTE_ALL)
         for row in data:
             wr.writerow(row)
 
+    time_passed = datetime.datetime.now() - time_start_seq
+    time_now = datetime.datetime.now()
+    log_msg = str(time_now) + "  Sequenz 6 finished in: " + str(time_passed)
+    logger.info(log_msg)
+
 def sequenz7(v_start, v_end, v_step,wait_time,afg,runs):
+    time_start_seq = datetime.datetime.now()
     afg.set_offset(2, 3.2)
     filename = next_free_filename("sequenz7_run")
     new_csv(filename)
@@ -265,13 +307,20 @@ def sequenz7(v_start, v_end, v_step,wait_time,afg,runs):
                 data.append([v_current])
                 data[measurment_counter].append(pins_state)
             measurment_counter = measurment_counter + 1
-
+        msg = "Finished Sequenz 7 run:" + str(run_counter)
+        logger.info(msg)
     with open(filename, 'w') as file:
         wr = csv.writer(file, quoting=csv.QUOTE_ALL)
         for row in data:
             wr.writerow(row)
 
+    time_passed = datetime.datetime.now() - time_start_seq
+    time_now = datetime.datetime.now()
+    log_msg = str(time_now) + "  Sequenz 7 finished in: " + str(time_passed)
+    logger.info(log_msg)
+
 def sequenz8(v_start, v_end, v_step, wait_time, afg, runs):
+    time_start_seq = datetime.datetime.now()
     afg.set_offset(1, 3.2)
     filename = next_free_filename("sequenz8_run")
     new_csv(filename)
@@ -296,13 +345,20 @@ def sequenz8(v_start, v_end, v_step, wait_time, afg, runs):
                 data.append([v_current])
                 data[measurment_counter].append(pins_state)
             measurment_counter = measurment_counter + 1
-
+        msg = "Finished Sequenz 8 run:" + str(run_counter)
+        logger.info(msg)
     with open(filename, 'w') as file:
         wr = csv.writer(file, quoting=csv.QUOTE_ALL)
         for row in data:
             wr.writerow(row)
 
+    time_passed = datetime.datetime.now() - time_start_seq
+    time_now = datetime.datetime.now()
+    log_msg = str(time_now) + "  Sequenz 8 finished in: " + str(time_passed)
+    logger.info(log_msg)
+
 def sequenz9(v_start, v_end, v_step,wait_time,afg,runs):
+    time_start_seq = datetime.datetime.now()
     filename = next_free_filename("sequenz9_run")
     new_csv(filename)
     run_counter = 1
@@ -328,13 +384,20 @@ def sequenz9(v_start, v_end, v_step,wait_time,afg,runs):
                 data.append([v_current])
                 data[measurment_counter].append(pins_state)
             measurment_counter = measurment_counter + 1
-
+        msg = "Finished Sequenz 9 run:" + str(run_counter)
+        logger.info(msg)
     with open(filename, 'w') as file:
         wr = csv.writer(file, quoting=csv.QUOTE_ALL)
         for row in data:
             wr.writerow(row)
 
+    time_passed = datetime.datetime.now() - time_start_seq
+    time_now = datetime.datetime.now()
+    log_msg = str(time_now) + "  Sequenz 9 finished in: " + str(time_passed)
+    logger.info(log_msg)
+
 def sequenz10(v_start, v_end, v_step, wait_time, afg, runs):
+    time_start_seq = datetime.datetime.now()
     filename = next_free_filename("sequenz10_run")
     new_csv(filename)
     run_counter = 1
@@ -360,10 +423,20 @@ def sequenz10(v_start, v_end, v_step, wait_time, afg, runs):
                 data.append([v_current])
                 data[measurment_counter].append(pins_state)
             measurment_counter = measurment_counter + 1
+
+        msg = "Finished Sequenz 10 run:" + str(run_counter)
+        logger.info(msg)
+
     with open(filename, 'w') as file:
         wr = csv.writer(file, quoting=csv.QUOTE_ALL)
         for row in data:
             wr.writerow(row)
+
+    time_passed = datetime.datetime.now() - time_start_seq
+    time_now = datetime.datetime.now()
+    log_msg = str(time_now) + "  Sequenz 10 finished in: " + str(time_passed)
+    logger.info(log_msg)
+
 def save_csv(filename, data,v_current):
     row = {
         "voltage":v_current,
