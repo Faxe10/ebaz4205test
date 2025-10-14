@@ -29,7 +29,7 @@ class Api_Server:
             return jsonify (data, format(data, f'014b'))
 
         @app.route('/api/get_pin_state', methods=['GET'])
-        def get_data3():
+        def get_pin_state():
             data_port1 = self.fpga.get_data1()
             data_port2 = self.fpga.get_data2()
             data_port3 = self.fpga.get_data3()
