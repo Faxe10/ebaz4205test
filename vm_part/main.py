@@ -13,7 +13,7 @@ import datetime
 import pandas as pd
 from tektronixAFG31252 import AFG31252
 from pathlib import Path
-
+EBAZ_URl = "http://10.140.1.238:8082"
 logger = logging.getLogger(__name__)
 def main():
     time_now = str(datetime.date.today())
@@ -31,7 +31,7 @@ def main():
     v_start = 0
     v_end = 3.201
     v_step = 0.001
-    wait_time = 0.01 #time wait befor check in s
+    wait_time = 0.001 #time wait befor check in s
     runs = 25
     sequenz1(v_start,v_end,v_step,wait_time,afg, runs)
     sequenz2(v_start, v_end, v_step, wait_time, afg, runs)
@@ -80,18 +80,7 @@ def sequenz1(v_start, v_end, v_step,wait_time,afg,runs):
             afg.set_offset(1,v_current)
             v_current += v_step
             time.sleep(wait_time)
-            data1_pins_state = request_data(1)[1] # have error in api, don't want to connect to api server
-            data2_pins_state = request_data(2)[1]
-            data3_pins_state = request_data(3)[1]
-            try:
-                data[measurment_counter].append(data1_pins_state)
-                data[measurment_counter].append(data2_pins_state)
-                data[measurment_counter].append(data3_pins_state)
-            except:
-                data.append([v_current])
-                data[measurment_counter].append(data1_pins_state)
-                data[measurment_counter].append(data2_pins_state)
-                data[measurment_counter].append(data3_pins_state)
+            data = add_data(data,v_current, measurment_counter)
             measurment_counter = measurment_counter + 1
             #save_csv(filename,data,v_current )
         msg = "Finished Sequenz 1 run:" + str(run_counter)
@@ -127,18 +116,7 @@ def sequenz2(v_start, v_end, v_step, wait_time, afg, runs):
             afg.set_offset(2, v_current)
             v_current += v_step
             time.sleep(wait_time)
-            data1_pins_state = request_data(1)[1]
-            data2_pins_state = request_data(2)[1]
-            data3_pins_state = request_data(3)[1]
-            try:
-                data[measurment_counter].append(data1_pins_state)
-                data[measurment_counter].append(data2_pins_state)
-                data[measurment_counter].append(data3_pins_state)
-            except:
-                data.append([v_current])
-                data[measurment_counter].append(data1_pins_state)
-                data[measurment_counter].append(data2_pins_state)
-                data[measurment_counter].append(data3_pins_state)
+            data = add_data(data,v_current, measurment_counter)
             measurment_counter = measurment_counter + 1
         msg = "Finished Sequenz 2 run:" + str(run_counter)
         logger.info(msg)
@@ -173,19 +151,7 @@ def sequenz3(v_start, v_end, v_step, wait_time, afg, runs):
             afg.set_offset(1, v_current)
             v_current += v_step
             time.sleep(wait_time)
-            data1_pins_state = request_data(1)[1]
-            data2_pins_state = request_data(2)[1]
-            data3_pins_state = request_data(3)[1]
-            #save_csv(filename, data, v_current)
-            try:
-                data[measurment_counter].append(data1_pins_state)
-                data[measurment_counter].append(data2_pins_state)
-                data[measurment_counter].append(data3_pins_state)
-            except:
-                data.append([v_current])
-                data[measurment_counter].append(data1_pins_state)
-                data[measurment_counter].append(data2_pins_state)
-                data[measurment_counter].append(data3_pins_state)
+            data = add_data(data,v_current, measurment_counter)
             measurment_counter = measurment_counter + 1
         msg = "Finished Sequenz 3 run:" + str(run_counter)
         logger.info(msg)
@@ -218,19 +184,7 @@ def sequenz4(v_start, v_end, v_step, wait_time, afg, runs):
             afg.set_offset(2, v_current)
             v_current += v_step
             time.sleep(wait_time)
-            data1_pins_state = request_data(1)[1]
-            data2_pins_state = request_data(2)[1]
-            data3_pins_state = request_data(3)[1]
-            #save_csv(filename, data, v_current)
-            try:
-                data[measurment_counter].append(data1_pins_state)
-                data[measurment_counter].append(data2_pins_state)
-                data[measurment_counter].append(data3_pins_state)
-            except:
-                data.append([v_current])
-                data[measurment_counter].append(data1_pins_state)
-                data[measurment_counter].append(data2_pins_state)
-                data[measurment_counter].append(data3_pins_state)
+            data = add_data(data,v_current, measurment_counter)
             measurment_counter = measurment_counter + 1
         msg = "Finished Sequenz 4 run:" + str(run_counter)
         logger.info(msg)
@@ -265,19 +219,7 @@ def sequenz5(v_start, v_end, v_step,wait_time,afg,runs):
             afg.set_offset(1,v_current)
             v_current -= v_step
             time.sleep(wait_time)
-            data1_pins_state = request_data(1)[1]
-            data2_pins_state = request_data(2)[1]
-            data3_pins_state = request_data(3)[1]
-            #save_csv(filename,data,v_current )
-            try:
-                data[measurment_counter].append(data1_pins_state)
-                data[measurment_counter].append(data2_pins_state)
-                data[measurment_counter].append(data3_pins_state)
-            except:
-                data.append([v_current])
-                data[measurment_counter].append(data1_pins_state)
-                data[measurment_counter].append(data2_pins_state)
-                data[measurment_counter].append(data3_pins_state)
+            data = add_data(data,v_current, measurment_counter)
             measurment_counter = measurment_counter + 1
         msg = "Finished Sequenz 5 run:" + str(run_counter)
         logger.info(msg)
@@ -312,19 +254,7 @@ def sequenz6(v_start, v_end, v_step, wait_time, afg, runs):
             afg.set_offset(2, v_current)
             v_current -= v_step
             time.sleep(wait_time)
-            data1_pins_state = request_data(1)[1]
-            data2_pins_state = request_data(2)[1]
-            data3_pins_state = request_data(3)[1]
-            #save_csv(filename, data, v_current)
-            try:
-                data[measurment_counter].append(data1_pins_state)
-                data[measurment_counter].append(data2_pins_state)
-                data[measurment_counter].append(data3_pins_state)
-            except:
-                data.append([v_current])
-                data[measurment_counter].append(data1_pins_state)
-                data[measurment_counter].append(data2_pins_state)
-                data[measurment_counter].append(data3_pins_state)
+            data = add_data(data,v_current, measurment_counter)
             measurment_counter = measurment_counter + 1
         msg = "Finished Sequenz 6 run:" + str(run_counter)
         logger.info(msg)
@@ -359,19 +289,7 @@ def sequenz7(v_start, v_end, v_step,wait_time,afg,runs):
             afg.set_offset(1,v_current)
             v_current -= v_step
             time.sleep(wait_time)
-            data1_pins_state = request_data(1)[1]
-            data2_pins_state = request_data(2)[1]
-            data3_pins_state = request_data(3)[1]
-            #save_csv(filename,data,v_current )
-            try:
-                data[measurment_counter].append(data1_pins_state)
-                data[measurment_counter].append(data2_pins_state)
-                data[measurment_counter].append(data3_pins_state)
-            except:
-                data.append([v_current])
-                data[measurment_counter].append(data1_pins_state)
-                data[measurment_counter].append(data2_pins_state)
-                data[measurment_counter].append(data3_pins_state)
+            data = add_data(data,v_current, measurment_counter)
             measurment_counter = measurment_counter + 1
         msg = "Finished Sequenz 7 run:" + str(run_counter)
         logger.info(msg)
@@ -406,19 +324,7 @@ def sequenz8(v_start, v_end, v_step, wait_time, afg, runs):
             afg.set_offset(2, v_current)
             v_current -= v_step
             time.sleep(wait_time)
-            data1_pins_state = request_data(1)[1]
-            data2_pins_state = request_data(2)[1]
-            data3_pins_state = request_data(3)[1]
-            #save_csv(filename, data, v_curren0t)
-            try:
-                data[measurment_counter].append(data1_pins_state)
-                data[measurment_counter].append(data2_pins_state)
-                data[measurment_counter].append(data3_pins_state)
-            except:
-                data.append([v_current])
-                data[measurment_counter].append(data1_pins_state)
-                data[measurment_counter].append(data2_pins_state)
-                data[measurment_counter].append(data3_pins_state)
+            data = add_data(data,v_current, measurment_counter)
             measurment_counter = measurment_counter + 1
         msg = "Finished Sequenz 8 run:" + str(run_counter)
         logger.info(msg)
@@ -454,19 +360,7 @@ def sequenz9(v_start, v_end, v_step,wait_time,afg,runs):
             afg.set_offset(2, v_current)
             v_current += v_step
             time.sleep(wait_time)
-            data1_pins_state = request_data(1)[1]
-            data2_pins_state = request_data(2)[1]
-            data3_pins_state = request_data(3)[1]
-            #save_csv(filename,data,v_current )
-            try:
-                data[measurment_counter].append(data1_pins_state)
-                data[measurment_counter].append(data2_pins_state)
-                data[measurment_counter].append(data3_pins_state)
-            except:
-                data.append([v_current])
-                data[measurment_counter].append(data1_pins_state)
-                data[measurment_counter].append(data2_pins_state)
-                data[measurment_counter].append(data3_pins_state)
+            data = add_data(data,v_current, measurment_counter)
             measurment_counter = measurment_counter + 1
         msg = "Finished Sequenz 9 run:" + str(run_counter)
         logger.info(msg)
@@ -502,19 +396,7 @@ def sequenz10(v_start, v_end, v_step, wait_time, afg, runs):
             afg.set_offset(2, v_current)
             v_current -= v_step
             time.sleep(wait_time)
-            data1_pins_state = request_data(1)[1]
-            data2_pins_state = request_data(2)[1]
-            data3_pins_state = request_data(3)[1]
-            #save_csv(filename, data, v_current)
-            try:
-                data[measurment_counter].append(data1_pins_state)
-                data[measurment_counter].append(data2_pins_state)
-                data[measurment_counter].append(data3_pins_state)
-            except:
-                data.append([v_current])
-                data[measurment_counter].append(data1_pins_state)
-                data[measurment_counter].append(data2_pins_state)
-                data[measurment_counter].append(data3_pins_state)
+            data = add_data(data,v_current, measurment_counter)
             measurment_counter = measurment_counter + 1
 
         msg = "Finished Sequenz 10 run:" + str(run_counter)
@@ -537,8 +419,26 @@ def save_csv(filename, data,v_current):
     }
     df = pd.DataFrame([row])
     df.to_csv(filename,mode="a",header=False,index=False)
-
-
+def add_data(data,v_current,measurment_counter):
+    pins_state = request_data_all_pins()
+    data_port1_pins_state = pins_state["pin_state"]["data_ppor1"]
+    data_port2_pins_state = pins_state["pin_state"]["data_port2"]
+    data_port3_pins_state = pins_state["pin_state"]["data_port3"]
+    try:
+        data[measurment_counter].append(data_port1_pins_state)
+        data[measurment_counter].append(data_port2_pins_state)
+        data[measurment_counter].append(data_port3_pins_state)
+    except:
+        data.append([v_current])
+        data[measurment_counter].append(data_port1_pins_state)
+        data[measurment_counter].append(data_port2_pins_state)
+        data[measurment_counter].append(data_port3_pins_state)
+    return data
+def request_data_all_pins():
+    url = EBAZ_URl + "/api/get_data"
+    response = requests.get(url)
+    print(response)
+    return response.json()
 def new_csv(filename):
     row = {
         "voltage": 0,

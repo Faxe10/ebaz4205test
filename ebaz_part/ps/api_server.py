@@ -28,17 +28,17 @@ class Api_Server:
             data = self.fpga.get_data3()
             return jsonify (data, format(data, f'014b'))
 
-        @app.route('/api/get_data', methods=['GET'])
+        @app.route('/api/get_pin_state', methods=['GET'])
         def get_data3():
             data_port1 = self.fpga.get_data1()
             data_port2 = self.fpga.get_data2()
             data_port3 = self.fpga.get_data3()
             return_msg  = jsonify ({
                 "bitwidth": 14,
-                "values": {  # numerisch weiterverarbeitbar
-                "data1": f"{data_port1:014b}",
-                "data2": f"{data_port2:014b}",
-                "data3": f"{data_port3:014b}"
+                "pin_state": {  # numerisch weiterverarbeitbar
+                "data_port1": f"{data_port1:014b}",
+                "data_port2": f"{data_port2:014b}",
+                "data_port3": f"{data_port3:014b}"
             }})
             return return_msg
 if __name__ == '__main__':
