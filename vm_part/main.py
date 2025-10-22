@@ -13,7 +13,7 @@ import datetime
 import pandas as pd
 from tektronixAFG31252 import AFG31252
 from pathlib import Path
-EBAZ_URl = "http://10.140.1.238:8082"
+EBAZ_URl = "http://10.140.1.143:8082"
 logger = logging.getLogger(__name__)
 def main():
     time_now = str(datetime.date.today())
@@ -22,17 +22,21 @@ def main():
     logger.info('start_setup')
     afg_ip = '10.140.1.17'
     afg = AFG31252(afg_ip)
+    afg.set_impedance(1, "INF")
+    afg.set_impedance(2, "INF")
     afg.set_waveform(1, "DC")
     afg.set_waveform(2, "DC")
     afg.set_high_limit(1, 3.3)
     afg.set_high_limit(2, 3.3)
     afg.set_low_limit(1, 0)
     afg.set_low_limit(2, 0)
+    afg.set_output(1, 1)
+    afg.set_output(2, 1)
     v_start = 0
     v_end = 3.201
     v_step = 0.001
     wait_time = 0.001 #time wait befor check in s
-    runs = 25
+    runs = 5
     sequenz1(v_start,v_end,v_step,wait_time,afg, runs)
     sequenz2(v_start, v_end, v_step, wait_time, afg, runs)
     sequenz3(v_start, v_end, v_step, wait_time, afg, runs)
@@ -43,7 +47,9 @@ def main():
     sequenz8(v_end, v_start, v_step, wait_time, afg, runs)
     sequenz9(v_start, v_end, v_step, wait_time, afg, runs)
     sequenz10(v_end, v_start, v_step, wait_time, afg, runs)
-
+    sequenz11(v_start, v_end, v_step, wait_time, afg, runs)
+    sequenz12(v_start, v_end, v_step, wait_time, afg, runs)
+    sequenz13(v_start, v_end, v_step, wait_time, afg, runs)
 def request_data(data_port):
     url = "http://10.140.1.238:8082/api/get_data" + str(data_port)
     response = requests.get(url)
@@ -67,14 +73,7 @@ def sequenz1(v_start, v_end, v_step,wait_time,afg,runs):
     data.append(["Voltage"])
     for  i in range(runs):
         measurment_counter = 1
-        run = "run" + str(run_counter)
-        run_data1 = run + "_data1"
-        run_data2 = run + "_data2"
-        run_data3 = run + "_data3"
-        run_counter = run_counter + 1
-        data[0].append(run_data1)
-        data[0].append(run_data2)
-        data[0].append(run_data3)
+        data = add_run_caption(data,run_counter)
         v_current = v_start
         while v_current < v_end:
             afg.set_offset(1,v_current)
@@ -85,6 +84,7 @@ def sequenz1(v_start, v_end, v_step,wait_time,afg,runs):
             #save_csv(filename,data,v_current )
         msg = "Finished Sequenz 1 run:" + str(run_counter)
         logger.info(msg)
+        run_counter = run_counter + 1
     with open(filename, 'w') as file:
         wr = csv.writer(file, quoting=csv.QUOTE_ALL)
         for row in data:
@@ -104,13 +104,7 @@ def sequenz2(v_start, v_end, v_step, wait_time, afg, runs):
     data.append(["Voltage"])
     for i in range(runs):
         measurment_counter = 1
-        run = "run" + str(run_counter)
-        run_counter = run_counter + 1
-        run_data1 = run + "_data1"
-        run_data3 = run + "_data3"
-        run_counter = run_counter + 1
-        data[0].append(run_data1)
-        data[0].append(run_data3)
+        data = add_run_caption(data,run_counter)
         v_current = v_start
         while v_current < v_end:
             afg.set_offset(2, v_current)
@@ -120,6 +114,7 @@ def sequenz2(v_start, v_end, v_step, wait_time, afg, runs):
             measurment_counter = measurment_counter + 1
         msg = "Finished Sequenz 2 run:" + str(run_counter)
         logger.info(msg)
+        run_counter = run_counter + 1
     with open(filename, 'w') as file:
         wr = csv.writer(file, quoting=csv.QUOTE_ALL)
         for row in data:
@@ -140,12 +135,7 @@ def sequenz3(v_start, v_end, v_step, wait_time, afg, runs):
     data.append(["Voltage"])
     for i in range(runs):
         measurment_counter = 1
-        run = "run" + str(run_counter)
-        run_data1 = run + "_data1"
-        run_data3 = run + "_data3"
-        run_counter = run_counter + 1
-        data[0].append(run_data1)
-        data[0].append(run_data3)
+        data = add_run_caption(data,run_counter)
         v_current = v_start
         while v_current < v_end:
             afg.set_offset(1, v_current)
@@ -155,6 +145,7 @@ def sequenz3(v_start, v_end, v_step, wait_time, afg, runs):
             measurment_counter = measurment_counter + 1
         msg = "Finished Sequenz 3 run:" + str(run_counter)
         logger.info(msg)
+        run_counter = run_counter + 1
     with open(filename, 'w') as file:
         wr = csv.writer(file, quoting=csv.QUOTE_ALL)
         for row in data:
@@ -173,12 +164,7 @@ def sequenz4(v_start, v_end, v_step, wait_time, afg, runs):
     data.append(["Voltage"])
     for i in range(runs):
         measurment_counter = 1
-        run = "run" + str(run_counter)
-        run_data1 = run + "_data1"
-        run_data3 = run + "_data3"
-        run_counter = run_counter + 1
-        data[0].append(run_data1)
-        data[0].append(run_data3)
+        data = add_run_caption(data, run_counter)
         v_current = v_start
         while v_current < v_end:
             afg.set_offset(2, v_current)
@@ -188,6 +174,7 @@ def sequenz4(v_start, v_end, v_step, wait_time, afg, runs):
             measurment_counter = measurment_counter + 1
         msg = "Finished Sequenz 4 run:" + str(run_counter)
         logger.info(msg)
+        run_counter = run_counter + 1
     with open(filename, 'w') as file:
         wr = csv.writer(file, quoting=csv.QUOTE_ALL)
         for row in data:
@@ -208,12 +195,7 @@ def sequenz5(v_start, v_end, v_step,wait_time,afg,runs):
     data.append(["Voltage"])
     for i in range(runs):
         measurment_counter = 1
-        run = "run" + str(run_counter)
-        run_data1 = run + "_data1"
-        run_data3 = run + "_data3"
-        run_counter = run_counter + 1
-        data[0].append(run_data1)
-        data[0].append(run_data3)
+        data = add_run_caption(data,run_counter)
         v_current = v_start
         while v_current > v_end:
             afg.set_offset(1,v_current)
@@ -223,6 +205,8 @@ def sequenz5(v_start, v_end, v_step,wait_time,afg,runs):
             measurment_counter = measurment_counter + 1
         msg = "Finished Sequenz 5 run:" + str(run_counter)
         logger.info(msg)
+        run_counter = run_counter + 1
+
     with open(filename, 'w') as file:
         wr = csv.writer(file, quoting=csv.QUOTE_ALL)
         for row in data:
@@ -243,12 +227,7 @@ def sequenz6(v_start, v_end, v_step, wait_time, afg, runs):
     data.append(["Voltage"])
     for i in range(runs):
         measurment_counter = 1
-        run = "run" + str(run_counter)
-        run_data1 = run + "_data1"
-        run_data3 = run + "_data3"
-        run_counter = run_counter + 1
-        data[0].append(run_data1)
-        data[0].append(run_data3)
+        data = add_run_caption(data,run_counter)
         v_current = v_start
         while v_current > v_end:
             afg.set_offset(2, v_current)
@@ -258,6 +237,7 @@ def sequenz6(v_start, v_end, v_step, wait_time, afg, runs):
             measurment_counter = measurment_counter + 1
         msg = "Finished Sequenz 6 run:" + str(run_counter)
         logger.info(msg)
+        run_counter = run_counter + 1
     with open(filename, 'w') as file:
         wr = csv.writer(file, quoting=csv.QUOTE_ALL)
         for row in data:
@@ -278,12 +258,7 @@ def sequenz7(v_start, v_end, v_step,wait_time,afg,runs):
     data.append(["Voltage"])
     for i in range(runs):
         measurment_counter = 1
-        run = "run" + str(run_counter)
-        run_data1 = run + "_data1"
-        run_data3 = run + "_data3"
-        run_counter = run_counter + 1
-        data[0].append(run_data1)
-        data[0].append(run_data3)
+        data = add_run_caption(data,run_counter)
         v_current = v_start
         while v_current > v_end:
             afg.set_offset(1,v_current)
@@ -293,6 +268,7 @@ def sequenz7(v_start, v_end, v_step,wait_time,afg,runs):
             measurment_counter = measurment_counter + 1
         msg = "Finished Sequenz 7 run:" + str(run_counter)
         logger.info(msg)
+        run_counter = run_counter + 1
     with open(filename, 'w') as file:
         wr = csv.writer(file, quoting=csv.QUOTE_ALL)
         for row in data:
@@ -313,12 +289,7 @@ def sequenz8(v_start, v_end, v_step, wait_time, afg, runs):
     data.append(["Voltage"])
     for i in range(runs):
         measurment_counter = 1
-        run = "run" + str(run_counter)
-        run_data1 = run + "_data1"
-        run_data3 = run + "_data3"
-        run_counter = run_counter + 1
-        data[0].append(run_data1)
-        data[0].append(run_data3)
+        data = add_run_caption(data,run_counter)
         v_current = v_start
         while v_current > v_end:
             afg.set_offset(2, v_current)
@@ -328,6 +299,7 @@ def sequenz8(v_start, v_end, v_step, wait_time, afg, runs):
             measurment_counter = measurment_counter + 1
         msg = "Finished Sequenz 8 run:" + str(run_counter)
         logger.info(msg)
+        run_counter = run_counter + 1
     with open(filename, 'w') as file:
         wr = csv.writer(file, quoting=csv.QUOTE_ALL)
         for row in data:
@@ -347,13 +319,7 @@ def sequenz9(v_start, v_end, v_step,wait_time,afg,runs):
     data.append(["Voltage"])
     for i in range(runs):
         measurment_counter = 1
-        run = "run" + str(run_counter)
-        run_data1 = run + "_data1"
-        run_data3 = run + "_data3"
-        run_counter = run_counter + 1
-        data[0].append(run_data1)
-        data[0].append(run_data3)
-        new_csv(filename)
+        data = add_run_caption(data,run_counter)
         v_current = v_start
         while v_current < v_end:
             afg.set_offset(1,v_current)
@@ -364,6 +330,7 @@ def sequenz9(v_start, v_end, v_step,wait_time,afg,runs):
             measurment_counter = measurment_counter + 1
         msg = "Finished Sequenz 9 run:" + str(run_counter)
         logger.info(msg)
+        run_counter = run_counter + 1
     with open(filename, 'w') as file:
         wr = csv.writer(file, quoting=csv.QUOTE_ALL)
         for row in data:
@@ -373,7 +340,7 @@ def sequenz9(v_start, v_end, v_step,wait_time,afg,runs):
     time_now = datetime.datetime.now()
     log_msg = str(time_now) + "  Sequenz 9 finished in: " + str(time_passed)
     logger.info(log_msg)
-
+    run_counter = run_counter + 1
 def sequenz10(v_start, v_end, v_step, wait_time, afg, runs):
     time_start_seq = datetime.datetime.now()
     filename = next_free_filename("sequenz10_run")
@@ -383,13 +350,7 @@ def sequenz10(v_start, v_end, v_step, wait_time, afg, runs):
     data.append(["Voltage"])
     for i in range(runs):
         measurment_counter = 1
-        run = "run" + str(run_counter)
-        run_data1 = run + "_data1"
-        run_data3 = run + "_data3"
-        run_counter = run_counter + 1
-        data[0].append(run_data1)
-        data[0].append(run_data3)
-        new_csv(filename)
+        data = add_run_caption(data, run_counter)
         v_current = v_start
         while v_current > v_end:
             afg.set_offset(1, v_current)
@@ -401,7 +362,7 @@ def sequenz10(v_start, v_end, v_step, wait_time, afg, runs):
 
         msg = "Finished Sequenz 10 run:" + str(run_counter)
         logger.info(msg)
-
+        run_counter = run_counter + 1
     with open(filename, 'w') as file:
         wr = csv.writer(file, quoting=csv.QUOTE_ALL)
         for row in data:
@@ -410,6 +371,120 @@ def sequenz10(v_start, v_end, v_step, wait_time, afg, runs):
     time_passed = datetime.datetime.now() - time_start_seq
     time_now = datetime.datetime.now()
     log_msg = str(time_now) + "  Sequenz 10 finished in: " + str(time_passed)
+    logger.info(log_msg)
+
+def sequenz11(v_start, v_end, v_step, wait_time, afg, runs):
+    time_start_seq = datetime.datetime.now()
+    filename = next_free_filename("sequenz11_run")
+    new_csv(filename)
+    run_counter = 1
+    data = []
+    data.append(["Voltage"])
+    afg.set_offset(2,0)
+    for i in range(runs):
+        measurment_counter = 1
+        data = add_run_caption(data, run_counter)
+        v_current = v_start
+        while v_current < v_end:
+            afg.set_offset(1, v_current)
+            v_current += v_step
+            time.sleep(wait_time)
+            data = add_data(data,v_current, measurment_counter)
+            measurment_counter = measurment_counter + 1
+        msg = "Finished Sequenz 11 part 1 run:" + str(run_counter)
+        logger.info(msg)
+        while v_current > v_start:
+            afg.set_offset(1, v_current)
+            time.sleep(wait_time)
+            data = add_data(data, v_current, measurment_counter)
+            measurment_counter = measurment_counter + 1
+        msg = "Finished Sequenz 11 part 2 run:" + str(run_counter)
+        logger.info(msg)
+        run_counter = run_counter + 1
+    with open(filename, 'w') as file:
+        wr = csv.writer(file, quoting=csv.QUOTE_ALL)
+        for row in data:
+            wr.writerow(row)
+    time_passed = datetime.datetime.now() - time_start_seq
+    time_now = datetime.datetime.now()
+    log_msg = str(time_now) + "  Sequenz 11 finished in: " + str(time_passed)
+    logger.info(log_msg)
+
+def sequenz12(v_start, v_end, v_step, wait_time, afg, runs):
+    time_start_seq = datetime.datetime.now()
+    filename = next_free_filename("sequenz12_run")
+    new_csv(filename)
+    run_counter = 1
+    data = []
+    data.append(["Voltage"])
+    afg.set_offset(1, 0)
+    for i in range(runs):
+        measurment_counter = 1
+        data = add_run_caption(data, run_counter)
+        v_current = v_start
+        while v_current < v_end:
+            afg.set_offset(2, v_current)
+            v_current += v_step
+            time.sleep(wait_time)
+            data = add_data(data, v_current, measurment_counter)
+            measurment_counter = measurment_counter + 1
+        msg = "Finished Sequenz 12 part 1 run:" + str(run_counter)
+        logger.info(msg)
+        while v_current > v_start:
+            afg.set_offset(2, v_current)
+            time.sleep(wait_time)
+            data = add_data(data, v_current, measurment_counter)
+            measurment_counter = measurment_counter + 1
+        msg = "Finished Sequenz 12 part 2 run:" + str(run_counter)
+        logger.info(msg)
+        run_counter = run_counter + 1
+    with open(filename, 'w') as file:
+        wr = csv.writer(file, quoting=csv.QUOTE_ALL)
+        for row in data:
+            wr.writerow(row)
+
+    time_passed = datetime.datetime.now() - time_start_seq
+    time_now = datetime.datetime.now()
+    log_msg = str(time_now) + "  Sequenz 12 finished in: " + str(time_passed)
+    logger.info(log_msg)
+
+def sequenz13(v_start, v_end, v_step, wait_time, afg, runs):
+    time_start_seq = datetime.datetime.now()
+    filename = next_free_filename("sequenz13_run")
+    new_csv(filename)
+    run_counter = 1
+    data = []
+    data.append(["Voltage"])
+    for i in range(runs):
+        measurment_counter = 1
+        data = add_run_caption(data, run_counter)
+        v_current = v_start
+        while v_current < v_end:
+            afg.set_offset(1, v_current)
+            afg.set_offset(2, v_current)
+            v_current += v_step
+            time.sleep(wait_time)
+            data = add_data(data, v_current, measurment_counter)
+            measurment_counter = measurment_counter + 1
+        msg = "Finished Sequenz 13 part 1 run:" + str(run_counter)
+        logger.info(msg)
+        while v_current > v_start:
+            afg.set_offset(1, v_current)
+            afg.set_offset(2, v_current)
+            time.sleep(wait_time)
+            data = add_data(data, v_current, measurment_counter)
+            measurment_counter = measurment_counter + 1
+        msg = "Finished Sequenz 13 part 2 run:" + str(run_counter)
+        logger.info(msg)
+        run_counter = run_counter + 1
+    with open(filename, 'w') as file:
+        wr = csv.writer(file, quoting=csv.QUOTE_ALL)
+        for row in data:
+            wr.writerow(row)
+
+    time_passed = datetime.datetime.now() - time_start_seq
+    time_now = datetime.datetime.now()
+    log_msg = str(time_now) + "  Sequenz 13 finished in: " + str(time_passed)
     logger.info(log_msg)
 
 def save_csv(filename, data,v_current):
@@ -421,7 +496,7 @@ def save_csv(filename, data,v_current):
     df.to_csv(filename,mode="a",header=False,index=False)
 def add_data(data,v_current,measurment_counter):
     pins_state = request_data_all_pins()
-    data_port1_pins_state = pins_state["pin_state"]["data_ppor1"]
+    data_port1_pins_state = pins_state["pin_state"]["data_port1"]
     data_port2_pins_state = pins_state["pin_state"]["data_port2"]
     data_port3_pins_state = pins_state["pin_state"]["data_port3"]
     try:
@@ -435,15 +510,27 @@ def add_data(data,v_current,measurment_counter):
         data[measurment_counter].append(data_port3_pins_state)
     return data
 def request_data_all_pins():
-    url = EBAZ_URl + "/api/get_data"
+    url = EBAZ_URl + "/api/get_pin_state"
+    print(url)
     response = requests.get(url)
     print(response)
     return response.json()
+def add_run_caption(data,run_count):
+    run = "_run" + str(run_count)
+    run_data1 = run + "_data1"
+    run_data2 = run + "_data2"
+    run_data3 = run + "_data3"
+    data[0].append(run_data1)
+    data[0].append(run_data2)
+    data[0].append(run_data3)
+    return data
+
 def new_csv(filename):
     row = {
         "voltage": 0,
         "data1": 0,
         "data2": 0,
+        "data3": 0,
     }
     df = pd.DataFrame([row])
     df.to_csv(filename,mode="a",header=True,index=False)

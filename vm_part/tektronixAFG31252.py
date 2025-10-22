@@ -17,15 +17,7 @@ class AFG31252:
         self.set_low_limit(1,0)
         self.set_low_limit(2,0)
 
-        #Signal conf
-        self.set_waveform(1,"PULSE")
-        self.set_waveform(2,"PULSE")
-        self.set_low(1,0)
-        self.set_low(2,0)
-        self.set_high(1,3)
-        self.set_high(2,3)
-        self.configure_burst(1,1,"TRIG")
-        self.configure_burst(2,1,"TRIG")
+
         self.set_output(1,1)
         self.set_output(2,1)
     def set_output(self,ch,on):
